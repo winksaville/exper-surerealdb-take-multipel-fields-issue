@@ -1,65 +1,40 @@
 # exper-surrealdb-take-multiple-fields-issue
 
-An rust app that shows attempting to use take on multiple fields via Vec<FieldType>
-fails.
+A simple test where the rust app that shows attempting to use take
+on multiple fields via Vec<FieldType> fails.
 
 ```
-wink@3900x 24-05-28T21:25:10.956Z:~/prgs/SurrealDB/exper-surrealdb-take-multiple-fields-issue (main)
+wink@3900x 24-05-29T05:13:34.101Z:~/prgs/SurrealDB/exper-surrealdb-take-multiple-fields-issue (simplest)
+$ cargo run
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.15s
+     Running `target/debug/exper-surrealdb-take-multiple-fields-issue`
+[src/main.rs:35:5] &names = [
+    "Tobie Hitchcock",
+]
+[src/main.rs:39:5] &ages = []
+thread 'main' panicked at src/main.rs:40:5:
+Expected 1 age got 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+wink@3900x 24-05-29T05:15:54.043Z:~/prgs/SurrealDB/exper-surrealdb-take-multiple-fields-issue (simplest)
+$ cargo fmt^C
+wink@3900x 24-05-29T05:15:56.766Z:~/prgs/SurrealDB/exper-surrealdb-take-multiple-fields-issue (simplest)
+$ cargo clippy && cargo fmt
+    Checking exper-surrealdb-take-multiple-fields-issue v0.1.0 (/home/wink/prgs/SurrealDB/exper-surrealdb-take-multiple-fields-issue)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.33s
+wink@3900x 24-05-29T05:15:59.691Z:~/prgs/SurrealDB/exper-surrealdb-take-multiple-fields-issue (simplest)
 $ cargo run
    Compiling exper-surrealdb-take-multiple-fields-issue v0.1.0 (/home/wink/prgs/SurrealDB/exper-surrealdb-take-multiple-fields-issue)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.54s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 5.60s
      Running `target/debug/exper-surrealdb-take-multiple-fields-issue`
-Create person Tobie Hitchcock and add it to persons table
-[src/main.rs:36:5] &tobie = [
-    Record {
-        id: Thing {
-            tb: "persons",
-            id: String(
-                "ri3mw8c32z1ljicnr260",
-            ),
-        },
-    },
-]
-Add a second person Tony Tiger to persons table
-[src/main.rs:47:5] &tony = [
-    Record {
-        id: Thing {
-            tb: "persons",
-            id: String(
-                "wr42wzcz7jfqfgls2b3x",
-            ),
-        },
-    },
-]
-
-"Select name, age FROM persons LIMIT 1", returns only 1 record
-then: let name: Option<String> = response.take((0, "name"))?; succeeds
-[src/main.rs:57:5] &name = Some(
+[src/main.rs:35:5] &names = [
     "Tobie Hitchcock",
-)
-and: let age: Option<i64> = response.take((0, "age"))?; succeeds
-[src/main.rs:62:5] &age = Some(
-    30,
-)
-
-"Select name, age FROM persons", which will return 2 records
-then: let names: Vec<String> = response.take((0, "name"))?; succeeds, there are 2 records
-[src/main.rs:74:5] &names = [
-    "Tobie Hitchcock",
-    "Tony Tiger",
 ]
-but: let ages: Vec<i64> = response.take((0, "age"))?; FAILS, there are 0 records
-[src/main.rs:78:5] &ages = []
-
-Reversing the order and doing another "SELECT name, age FROM persons"
-now: let ages: Vec<i64> = response.take((0, "age"))?; succeeds, there are 2 records
-[src/main.rs:90:5] &ages = [
-    30,
-    50,
-]
-but: let names: Vec<i64> = response.take((0, "name"))?; FAILS, there are 0 records
-[src/main.rs:97:5] &names = []
-wink@3900x 24-05-28T21:25:20.780Z:~/prgs/SurrealDB/exper-surrealdb-take-multiple-fields-issue (main)
+[src/main.rs:39:5] &ages = []
+thread 'main' panicked at src/main.rs:40:5:
+Expected 1 age got 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+wink@3900x 24-05-29T05:16:34.344Z:~/prgs/SurrealDB/exper-surrealdb-take-multiple-fields-issue (simplest)
+$ 
 ```
 
 ## License
